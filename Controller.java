@@ -1,14 +1,11 @@
-package assignment2;
-//comment test from urjit
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+//package assignment2;
 
 import org.apache.log4j.BasicConfigurator;
 
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import com.mongodb.DBCollection;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -19,10 +16,13 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 public class Controller {
 	static int count = 0;
-    public static void main(String[] args) throws Exception {
+   
+	
+	
+	public static void main(String[] args) throws Exception {
     	double start = System.currentTimeMillis();
-            String crawlStorageFolder = "D:/CrawlerData/";
-            int numberOfCrawlers = 10;            
+            String crawlStorageFolder = "CrawlerData/";
+            int numberOfCrawlers = 7;            
             //Frontier obj = new Frontier(null, null, null);
             BasicConfigurator.configure();
             CrawlConfig config = new CrawlConfig();
@@ -33,7 +33,10 @@ public class Controller {
             // Now connect to your databases
             DB db = mongoClient.getDB( "test" );
     		System.out.println("Connect to database successfully");
-            //boolean auth = db.authenticate(myUserName, myPassword);
+            
+    		
+    		
+    		//boolean auth = db.authenticate(myUserName, myPassword);
     		 //System.out.println("Authentication: "+auth);
             
             /*
@@ -58,17 +61,46 @@ public class Controller {
              */
             config.setPolitenessDelay(300);
 
-            config.setMaxDepthOfCrawling(70);
+            /*
+             * You can set the maximum crawl depth here. The default value is -1 for
+             * unlimited depth
+             */
+            config.setMaxDepthOfCrawling(50);
 
-            config.setMaxPagesToFetch(350);
+            /*
+             * You can set the maximum number of pages to crawl. The default value
+             * is -1 for unlimited number of pages
+             */
+            config.setMaxPagesToFetch(2000);
 
+            /*
+             * Do you want crawler4j to crawl also binary data ?
+             * example: the contents of pdf, or the metadata of images etc
+             */
             config.setIncludeBinaryContentInCrawling(false);
 
+            /*
+             * Do you need to set a proxy? If so, you can use:
+             * config.setProxyHost("proxyserver.example.com");
+             * config.setProxyPort(8080);
+             *
+             * If your proxy also needs authentication:
+             * config.setProxyUsername(username); config.getProxyPassword(password);
+             */
+
+            /*
+             * This config parameter can be used to set your crawl to be resumable
+             * (meaning that you can resume the crawl from a previously
+             * interrupted/crashed crawl). Note: if you enable resuming feature and
+             * want to start a fresh crawl, you need to delete the contents of
+             * rootFolder manually.
+             */
             config.setResumableCrawling(false);
             
             /* Naming the user agent*/
-            String userAgentString = "UCI WebCrawler 22363556/24449837/27481720";
+            String userAgentString = "UCI WebCrawler 27481720";
             config.setUserAgentString(userAgentString);
+
 
             /*
              * Instantiate the controller for this crawl.
@@ -86,6 +118,8 @@ public class Controller {
             //controller.addSeed("http://www.ics.uci.edu/~welling/");
             //controller.addSeed("http://www.ics.uci.edu/~lopes/");
             controller.addSeed("http://www.ics.uci.edu/");
+            //controller.addSeed("http://www.kraftscafe.com/");
+            //controller.addSeed("http://www.profcmn.com/");
 
             /*
              * Start the crawl. This is a blocking operation, meaning that your code
@@ -98,41 +132,20 @@ public class Controller {
             System.out.println("Number of unique URL: " + MyCrawler.urlList.size());
             System.out.println("Number of Sub Domains: " + MyCrawler.subDomainFreq.size());
             System.out.println(MyCrawler.subDomainFreq);
-            
-            String file = "D:/CrawlerData/urlList";
-			File urls = new File(file);
-			if (!urls.exists()){				
-						urls.createNewFile();
-			}
-					FileWriter fw1 = new FileWriter(urls,true);
-					BufferedWriter write1 = new BufferedWriter(fw1);
-					
-					for (String a : MyCrawler.urlList){
-						write1.write(a);
-						write1.newLine();
-					}					
-					write1.close();
-			String file1 = "D:/CrawlerData/Subdomains";
-			File urls1 = new File(file1);
-		    if (!urls1.exists()){			
-					    	//try {
-								urls1.createNewFile();
-							//} 
-					    	//catch (IOException e) {
-								//e.printStackTrace();
-							//}
-						}	
-		    FileWriter fw2 = new FileWriter(urls1,true);
-			BufferedWriter write2 = new BufferedWriter(fw2);
-			
-			for (String b : MyCrawler.subDomainList){
-				write2.write(b);
-				write2.newLine();
-			}					
-			write2.close();
             double end = System.currentTimeMillis();
             double ans = ((end-start)/1000)/60;
             System.out.println("Time Consumed: " + ans + " minutes");
+            
+//            DBCursor cursor = MyCrawler.coll.find();
+//            
+//            try {
+//               while(cursor.hasNext()) {
+//                   System.out.println(cursor.next());
+//               }
+//            } finally {
+//               cursor.close();
+//            }
+
     }
 }
 	

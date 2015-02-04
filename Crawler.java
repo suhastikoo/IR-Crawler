@@ -1,4 +1,4 @@
-package assignment2;
+//package assignment2;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
