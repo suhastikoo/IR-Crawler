@@ -1,4 +1,4 @@
-//package assignment2;
+package assignment2;
 
 import org.apache.log4j.BasicConfigurator;
 

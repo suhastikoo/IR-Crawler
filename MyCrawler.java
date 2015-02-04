@@ -1,4 +1,5 @@
-//package assignment2;
+package assignment2;
+
 
 import java.io.BufferedWriter;
 import java.io.File;
