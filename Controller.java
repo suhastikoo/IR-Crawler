@@ -65,13 +65,13 @@ public class Controller {
              * You can set the maximum crawl depth here. The default value is -1 for
              * unlimited depth
              */
-            config.setMaxDepthOfCrawling(50);
+            config.setMaxDepthOfCrawling(5);
 
             /*
              * You can set the maximum number of pages to crawl. The default value
              * is -1 for unlimited number of pages
              */
-            config.setMaxPagesToFetch(2000);
+            config.setMaxPagesToFetch(10);
 
             /*
              * Do you want crawler4j to crawl also binary data ?
@@ -145,6 +145,9 @@ public class Controller {
 //            } finally {
 //               cursor.close();
 //            }
+            MongoDBClass lencheck = new MongoDBClass();
+            System.out.println(lencheck.Maxlen);
+            System.out.println(lencheck.urlmax);
 
     }
 }

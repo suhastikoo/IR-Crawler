@@ -206,8 +206,11 @@ public class MyCrawler extends WebCrawler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-
-		
+	    
+	    MongoDBClass mongo = new MongoDBClass();
+	    mongo.addpage(text, url);
+	    
+		/*
 	    String normalisedtext = text.replaceAll("[^\\dA-Za-z]", " ");
 		String[] tokens;
 		tokens = normalisedtext.split("\\s+");
@@ -233,13 +236,13 @@ public class MyCrawler extends WebCrawler {
 			coll.insert(doc);
 			
 			DBObject myDoc = coll.findOne();
-		*/
+		
 
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
         
 		
 		
