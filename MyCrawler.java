@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.apache.http.Header;
@@ -38,11 +39,11 @@ public class MyCrawler extends WebCrawler {
 	   * You should implement this function to specify whether the given url
 	   * should be crawled or not (based on your crawling logic).
 	   */
-		static List<String> urlList = new ArrayList<String>();
+		//static List<String> urlList = new ArrayList<String>();
 		static Hashtable<String,Integer> urlFreq = new Hashtable<String,Integer>();
 		static Hashtable<String,Integer> urlFreqWeb = new Hashtable<String,Integer>();
 		
-		static Hashtable<String,List<String>> subDomainFreq = new Hashtable<String,List<String>>();
+		static TreeMap<String,Integer> subDomainFreq = new TreeMap<String,Integer>();
 		static int counter = 0;
 		Controller objCont = new Controller();
 		
@@ -96,19 +97,30 @@ public class MyCrawler extends WebCrawler {
 	    String html = htmlParseData.getHtml();
 	      
 	      
-	    List<WebURL> links = htmlParseData.getOutgoingUrls();
-	    
-	    
-	    String file1 = "CrawlerData/Subdomains";
-	    File urls1 = new File(file1);
-	    if (!urls1.exists()){			
-	    	try {
-				urls1.createNewFile();
-			} 
+//	    List<WebURL> links = htmlParseData.getOutgoingUrls();
+//	    
+	    String fileDatapath = "D:/CrawlerData/WebData/ParseData";
+	    String code = Integer.toString(url.hashCode());
+	    fileDatapath = fileDatapath.concat(code);
+	    File filename = new File(fileDatapath);   
+		try {
+			FileWriter fw = new FileWriter(filename,true);
+			BufferedWriter write = new BufferedWriter(fw);
+			write.write(text);
+			
+			write.newLine();
+			write.close();
+//	    String file1 = "CrawlerData/Subdomains";
+//	    File urls1 = new File(file1);
+//	    if (!urls1.exists()){			
+//	    	try {
+//				urls1.createNewFile();
+			}
+		
 	    	catch (IOException e) {
 				e.printStackTrace();
 			}
-		}	    
+//		}	    
 		
 	    List<String> list = new ArrayList<String>();
 	   
@@ -120,47 +132,47 @@ public class MyCrawler extends WebCrawler {
 	    	subDomain = subDomain.substring(0, subDomain.length()-4);
 	    	if (!subDomainFreq.containsKey(subDomain)){
 	    	//	list.add(url);
-		    	subDomainFreq.put(subDomain, list);
+		    	subDomainFreq.put(subDomain, 1);
 
-				try {
-					FileWriter fw2 = new FileWriter(urls1,true);
-					BufferedWriter write2 = new BufferedWriter(fw2);
-					write2.write(subDomain);
-					write2.newLine();
-					write2.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					FileWriter fw2 = new FileWriter(urls1,true);
+//					BufferedWriter write2 = new BufferedWriter(fw2);
+//					write2.write(subDomain);
+//					write2.newLine();
+//					write2.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 	    	}
 	    	else{
-		    	list = subDomainFreq.get(subDomain);
-		    	list.add(url);
-		    	subDomainFreq.put(subDomain, list);
+		    	//list = subDomainFreq.get(subDomain);
+		    	//list.add(url);
+		    	subDomainFreq.put(subDomain, subDomainFreq.get(subDomain)+1);
 	    	}
-	    try {
+//	    try {
 	    	urlFreq.put(url, 1);
-	    	String code = Integer.toString(url.hashCode());
-			String file = "CrawlerData/urlList";
-			File urls = new File(file);
-			if (!urls.exists()){
-				urls.createNewFile();
-			}
-			FileWriter fw1 = new FileWriter(urls,true);
-			BufferedWriter write1 = new BufferedWriter(fw1);
-			write1.write(url);
-			write1.newLine();
-			write1.close();
-			urlList.add(url);
-		} 
-	    catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} 
-	    catch (IOException e) {
-			e.printStackTrace();
-		}
+//	    	//String code = Integer.toString(url.hashCode());
+//			String file = "D:/CrawlerData/urlList";
+//			File urls = new File(file);
+//			if (!urls.exists()){
+//				urls.createNewFile();
+//			}
+//			FileWriter fw1 = new FileWriter(urls,true);
+//			BufferedWriter write1 = new BufferedWriter(fw1);
+//			write1.write(url);
+//			write1.newLine();
+//			write1.close();
+//			//urlList.add(url);
+//		} 
+//	    catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		} 
+//	    catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	    //logger.debug("Docid: {}"+docid);
-	    logger.info("URL: "+url);
+	    //logger.info("URL: "+url);
 	    //logger.debug("Domain: '{}'"+domain);
 	    //logger.debug("Sub-domain: '{}'"+subDomain);
 	    //logger.debug("Path: '{}'"+path);
@@ -207,8 +219,8 @@ public class MyCrawler extends WebCrawler {
 			e.printStackTrace();
 		}*/
 	    
-	    MongoDBClass mongo = new MongoDBClass();
-	    mongo.addpage(text, url);
+	    //MongoDBClass mongo = new MongoDBClass();
+	    //mongo.addpage(text, url);
 	    
 		/*
 	    String normalisedtext = text.replaceAll("[^\\dA-Za-z]", " ");
@@ -248,11 +260,11 @@ public class MyCrawler extends WebCrawler {
 		
 		
 
-	      logger.debug("Text length: {}"+text.length());
+	      //logger.debug("Text length: {}"+text.length());
 	      //logger.debug("Html length: {}"+html.length());
 	      //logger.debug("Number of outgoing links: {}"+links.size());
 	    }
-	    Header[] responseHeaders = page.getFetchResponseHeaders();
+	    //Header[] responseHeaders = page.getFetchResponseHeaders();
 	    /*if (responseHeaders != null) {
 	      logger.debug("Response headers:");
 	      for (Header header : responseHeaders) {
@@ -260,7 +272,7 @@ public class MyCrawler extends WebCrawler {
 	      }
 	    }*/
 
-	    logger.debug("=============");
+	    //logger.debug("=============");
 	    //return;
 	    //System.out.println(urlList);
 	  }

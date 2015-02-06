@@ -1,5 +1,16 @@
 package assignment2;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.log4j.BasicConfigurator;
 
 import com.mongodb.DB;
@@ -29,49 +40,21 @@ public class Controller {
             config.setCrawlStorageFolder(crawlStorageFolder);
             
             // To connect to mongodb server
-            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+            //MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
             // Now connect to your databases
-            DB db = mongoClient.getDB( "test" );
-    		System.out.println("Connect to database successfully");
+            //DB db = mongoClient.getDB( "test" );
+    		//System.out.println("Connect to database successfully");
             
     		
+    		config.setPolitenessDelay(300);
     		
-    		//boolean auth = db.authenticate(myUserName, myPassword);
-    		 //System.out.println("Authentication: "+auth);
-            
-            /*
-             * crawlStorageFolder is a folder where intermediate crawl data is
-             * stored.
-             */
-            //String crawlStorageFolder = args[0];
-
-            /*
-             * numberOfCrawlers shows the number of concurrent threads that should
-             * be initiated for crawling.
-             */
-            //int numberOfCrawlers = Integer.parseInt(args[1]);
-
-            //CrawlConfig config = new CrawlConfig();
-
-           // config.setCrawlStorageFolder(crawlStorageFolder);
-
-            /*
-             * Be polite: Make sure that we don't send more than 1 request per
-             * second (1000 milliseconds between requests).
-             */
-            config.setPolitenessDelay(300);
-
-            /*
-             * You can set the maximum crawl depth here. The default value is -1 for
-             * unlimited depth
-             */
-            config.setMaxDepthOfCrawling(5);
+            config.setMaxDepthOfCrawling(-1);
 
             /*
              * You can set the maximum number of pages to crawl. The default value
              * is -1 for unlimited number of pages
              */
-            config.setMaxPagesToFetch(10);
+            config.setMaxPagesToFetch(-1);
 
             /*
              * Do you want crawler4j to crawl also binary data ?
@@ -98,7 +81,7 @@ public class Controller {
             config.setResumableCrawling(false);
             
             /* Naming the user agent*/
-            String userAgentString = "UCI WebCrawler 27481720";
+            String userAgentString = "UCI WebCrawler 22363556/24449837/27481720";
             config.setUserAgentString(userAgentString);
 
 
@@ -129,9 +112,51 @@ public class Controller {
             //obj.
             //MyCrawler obj = new MyCrawler();
             //obj.table
-            System.out.println("Number of unique URL: " + MyCrawler.urlList.size());
-            System.out.println("Number of Sub Domains: " + MyCrawler.subDomainFreq.size());
+            System.out.println("Number of unique URL: " + MyCrawler.urlFreq.size());
+            System.out.println("Number of Sub Domains: " + (MyCrawler.subDomainFreq.size()));
             System.out.println(MyCrawler.subDomainFreq);
+            
+            String file = "D:/CrawlerData/urlList";
+    		File urls = new File(file);
+    		if (!urls.exists()){
+    			urls.createNewFile();
+    		}
+    		FileWriter fw1 = new FileWriter(urls,true);
+    		BufferedWriter write1 = new BufferedWriter(fw1);
+    		for (Map.Entry<String, Integer> a : MyCrawler.urlFreq.entrySet()){
+    			write1.write(a.getKey());
+    			write1.newLine();
+    		}
+    		
+    		
+    		write1.close();
+    			//urlList.add(url);
+    		 
+    	    
+            
+            
+            String file1 = "D:/CrawlerData/Subdomains";
+    	    File urls1 = new File(file1);
+    	    if (!urls1.exists()){
+    				urls1.createNewFile();    			
+    		}
+    	    
+    	    FileWriter fw2 = new FileWriter(urls1,true);
+			BufferedWriter write2 = new BufferedWriter(fw2);
+			
+			Set<Entry<String, Integer>> set = MyCrawler.subDomainFreq.entrySet();
+			Iterator<Entry<String, Integer>> itr = set.iterator();
+			while (itr.hasNext()){
+				Map.Entry<String, Integer> map = (Map.Entry<String, Integer>)itr.next();
+				write2.write(map.getKey() + " , " + map.getValue());
+				write2.newLine();
+			}
+//			for (Entry<String, Integer> a : MyCrawler.subDomainFreq.entrySet()){
+//				write2.write(a.getKey() + " , " + a.getValue());
+//				write2.newLine();
+//				
+//			}   
+			write2.close();
             double end = System.currentTimeMillis();
             double ans = ((end-start)/1000)/60;
             System.out.println("Time Consumed: " + ans + " minutes");
@@ -145,9 +170,9 @@ public class Controller {
 //            } finally {
 //               cursor.close();
 //            }
-            MongoDBClass lencheck = new MongoDBClass();
-            System.out.println(lencheck.Maxlen);
-            System.out.println(lencheck.urlmax);
+            //MongoDBClass lencheck = new MongoDBClass();
+            //System.out.println(MongoDBClass.Maxlen);
+            //System.out.println(MongoDBClass.urlmax);
 
     }
 }
