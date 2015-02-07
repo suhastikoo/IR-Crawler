@@ -20,7 +20,7 @@ public class DumpProcessing {
 		
 		// Putting Stop Words in List.
 		Hashtable<String,Integer> stopWordsList = new Hashtable<String,Integer>();
-		String path = "D:/CrawlerData/StopWords.txt";		
+		String path = "CrawlerData/StopWords.txt";		
 		String TempLine;
 		try {
 			BufferedReader TextFile = new BufferedReader(new FileReader(path));
@@ -37,12 +37,13 @@ public class DumpProcessing {
 		}
 		
 		
+		
 		// Read the dump files and tokenize it.
 		//MyCrawler crawlerObj = new MyCrawler();
 		Hashtable<String, Integer> table = new Hashtable<String, Integer>();
 		List<String> TempList = new ArrayList<String>();
-		String folderLocation = "D:/CrawlerData/WebData/ParseData";
-		String readUrl = "D:/CrawlerData/urlList";
+		String folderLocation = "CrawlerData/WebData/ParseData";
+		String readUrl = "CrawlerData/urlList";
 		String TempLine1;
 		String TempLine2;
 		int count = 0;
@@ -104,7 +105,9 @@ public class DumpProcessing {
 			//String temp = "aren't";
 			//TempLine = TempLine.replaceAll(temp, " ");
 			
-			TempLine = TempLine.replaceAll("[^a-zA-Z0-9']", " ");
+			TempLine = TempLine.replaceAll("[^a-zA-Z']", " ");
+			TempLine = TempLine.replaceAll("[']", "");
+			TempLine = TempLine.toLowerCase();
 			
 			StringTokenizer fileIn = new StringTokenizer(TempLine);	
 			
@@ -112,8 +115,8 @@ public class DumpProcessing {
 				String a = fileIn.nextToken();
 				//System.out.println(a);
 				a = a.replaceAll("[']", "");
-				//a = a.replaceAll(" ", "");
-				if (!stopWordsList.containsKey(a)){
+				if (!stopWordsList.containsKey(a) && a.length()>1){
+					
 					TempList.add(a);
 				}
 				numberOfWords += 1;
