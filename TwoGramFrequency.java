@@ -18,7 +18,7 @@ public class TwoGramFrequency {
 	public static void main(String[] args) {
 		Long start = System.currentTimeMillis();
 		Hashtable<String,Integer> stopWordsList = new Hashtable<String,Integer>();
-		String path = "CrawlerData/StopWords.txt";		
+		String path = "D:/CrawlerData/StopWords.txt";		
 		String TempLine;
 		try {
 			BufferedReader TextFile = new BufferedReader(new FileReader(path));
@@ -28,24 +28,23 @@ public class TwoGramFrequency {
 			TextFile.close();
 		} 
 		catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error!!!");
 		}
-		System.out.println(stopWordsList);
+		
+		//System.out.println(stopWordsList);
 		
 		Hashtable<Token, Integer> TokenFreqTable = new Hashtable<Token, Integer>();
 		List<String> TempList = new ArrayList<String>();
-		String folderLocation = "CrawlerData/WebData/ParseData";
-		String readUrl = "CrawlerData/urlList";
+		String folderLocation = "D:/CrawlerData/WebData/ParseData";
+		String readUrl = "D:/CrawlerData/urlList.txt";
 		String TempLine1;
 		String TempLine2;
 		int count = 0;
-		int initialWords = 0;
 		
-		String pageUrl = "";
+		//String pageUrl = "";
 		try {
 		BufferedReader TextFile1 = new BufferedReader(new FileReader(readUrl));
 		while((TempLine1 = TextFile1.readLine()) != null){
-			int finalWords = 0;
 			String TokenBuffer = "";
 			String hash = Integer.toString(TempLine1.hashCode());
 			String fileLocation = folderLocation.concat(hash);
@@ -56,40 +55,38 @@ public class TwoGramFrequency {
 						if (TokenBuffer==""){
 							TokenFreqTable = ComputeTokenFrequencies(TempList, TokenFreqTable, stopWordsList);
 						}
-						else{						
-							
+						else{							
 							TempList.add(0, TokenBuffer);
 							TokenFreqTable = ComputeTokenFrequencies(TempList, TokenFreqTable, stopWordsList);
 						}
-						if((TempList.size() - 1)>=0){
+						if((TempList.size() - 1) >= 0){
 						TokenBuffer = TempList.get(TempList.size() - 1);
 						}
 						TempList.clear();
 						
 					}
 				}
-				System.out.println("File number is" + Integer.toString(count));
+				//System.out.println("File number is" + Integer.toString(count));
 				TextFile.close();
 				count += 1;
 			}
-		TextFile1.close();
-		
-		}
-		
+		TextFile1.close();		
+		}		
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("File not found!!!");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error!!!");
 		}
+		
+		System.out.println("Total number of files accessed :" + count);
 		PrintToken(TokenFreqTable);
 		Long end = System.currentTimeMillis();
 		System.out.println("Time consumed: " + (end-start)/1000 + " seconds");
-	}
-		
+	}		
 		
 		public static List<String> TokenizeFileWithStop(String TempLine){
 			List<String> TempList = new ArrayList<String>();
-			TempLine = TempLine.replaceAll("[^a-zA-Z']", " ");
+			TempLine = TempLine.replaceAll("[^a-zA-Z0-9']", " ");
 			StringTokenizer fileIn = new StringTokenizer(TempLine);				
 			while (fileIn.hasMoreTokens()){
 				String a = fileIn.nextToken();
@@ -131,14 +128,12 @@ public class TwoGramFrequency {
 				if(stopWordsList.containsKey(List.get(i).toLowerCase())){
 					i++;
 					continue;
-				}
-					
+				}					
 				obj.token1 = List.get(i).toLowerCase();
 				if(stopWordsList.containsKey(List.get(i+1).toLowerCase())){
 					i++;
 					continue;
-				}
-					
+				}					
 				obj.token2 = List.get(i+1).toLowerCase();
 				if (table.containsKey(obj)){
 					Integer value = (Integer)table.get(obj);
@@ -153,5 +148,6 @@ public class TwoGramFrequency {
 			return table;
 		}
 	}
+
 
 

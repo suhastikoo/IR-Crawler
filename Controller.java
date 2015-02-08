@@ -3,48 +3,29 @@ package assignment2;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.BasicConfigurator;
 
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.DBCollection;
-
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.frontier.Frontier;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 public class Controller {
-	static int count = 0;
-   
-	
-	
+	static int count = 0;  
 	public static void main(String[] args) throws Exception {
     	double start = System.currentTimeMillis();
-            String crawlStorageFolder = "CrawlerData/";
-            int numberOfCrawlers = 7;            
-            //Frontier obj = new Frontier(null, null, null);
+            String crawlStorageFolder = "D:/CrawlerData/";
+            int numberOfCrawlers = 7;
+            
             BasicConfigurator.configure();
             CrawlConfig config = new CrawlConfig();
-            config.setCrawlStorageFolder(crawlStorageFolder);
-            
-            // To connect to mongodb server
-            //MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
-            // Now connect to your databases
-            //DB db = mongoClient.getDB( "test" );
-    		//System.out.println("Connect to database successfully");
-            
+            config.setCrawlStorageFolder(crawlStorageFolder);            
     		
     		config.setPolitenessDelay(300);
     		
@@ -98,20 +79,14 @@ public class Controller {
              * URLs that are fetched and then the crawler starts following links
              * which are found in these pages
              */
-            //controller.addSeed("http://www.ics.uci.edu/~welling/");
-            //controller.addSeed("http://www.ics.uci.edu/~lopes/");
             controller.addSeed("http://www.ics.uci.edu/");
-            //controller.addSeed("http://www.kraftscafe.com/");
-            //controller.addSeed("http://www.profcmn.com/");
 
             /*
              * Start the crawl. This is a blocking operation, meaning that your code
              * will reach the line after this only when crawling is finished.
              */
             controller.start(MyCrawler.class, numberOfCrawlers);  
-            //obj.
-            //MyCrawler obj = new MyCrawler();
-            //obj.table
+            
             System.out.println("Number of unique URL: " + MyCrawler.urlFreq.size());
             System.out.println("Number of Sub Domains: " + (MyCrawler.subDomainFreq.size()));
             System.out.println(MyCrawler.subDomainFreq);
@@ -126,14 +101,9 @@ public class Controller {
     		for (Map.Entry<String, Integer> a : MyCrawler.urlFreq.entrySet()){
     			write1.write(a.getKey());
     			write1.newLine();
-    		}
+    		}    		
     		
-    		
-    		write1.close();
-    			//urlList.add(url);
-    		 
-    	    
-            
+    		write1.close();            
             
             String file1 = "D:/CrawlerData/Subdomains";
     	    File urls1 = new File(file1);
@@ -150,29 +120,11 @@ public class Controller {
 				Map.Entry<String, Integer> map = (Map.Entry<String, Integer>)itr.next();
 				write2.write(map.getKey() + " , " + map.getValue());
 				write2.newLine();
-			}
-//			for (Entry<String, Integer> a : MyCrawler.subDomainFreq.entrySet()){
-//				write2.write(a.getKey() + " , " + a.getValue());
-//				write2.newLine();
-//				
-//			}   
+			}   
 			write2.close();
             double end = System.currentTimeMillis();
             double ans = ((end-start)/1000)/60;
             System.out.println("Time Consumed: " + ans + " minutes");
-            
-//            DBCursor cursor = MyCrawler.coll.find();
-//            
-//            try {
-//               while(cursor.hasNext()) {
-//                   System.out.println(cursor.next());
-//               }
-//            } finally {
-//               cursor.close();
-//            }
-            //MongoDBClass lencheck = new MongoDBClass();
-            //System.out.println(MongoDBClass.Maxlen);
-            //System.out.println(MongoDBClass.urlmax);
 
     }
 }
